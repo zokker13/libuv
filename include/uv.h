@@ -711,6 +711,9 @@ struct uv_pipe_s {
   UV_PIPE_PRIVATE_FIELDS
 };
 
+UV_EXTERN int uv_getpriority(uv_pid_t pid, int32_t *priority);
+UV_EXTERN int uv_setpriority(uv_pid_t pid, int32_t inc);
+
 UV_EXTERN int uv_pipe_init(uv_loop_t*, uv_pipe_t* handle, int ipc);
 UV_EXTERN int uv_pipe_open(uv_pipe_t*, uv_file file);
 UV_EXTERN int uv_pipe_bind(uv_pipe_t* handle, const char* name);

@@ -21,6 +21,9 @@
 
 #include "uv.h"
 
+TEST_DECLARE   (priority_get)
+TEST_DECLARE   (priority_set)
+TEST_DECLARE   (priority_set_get)
 TEST_DECLARE   (platform_output)
 TEST_DECLARE   (callback_order)
 TEST_DECLARE   (close_order)
@@ -720,6 +723,10 @@ TASK_LIST_START
   TEST_ENTRY  (tmpdir)
 
   TEST_ENTRY  (hrtime)
+
+  TEST_ENTRY  (priority_get)
+  TEST_ENTRY  (priority_set)
+  TEST_ENTRY  (priority_set_get)
 
   TEST_ENTRY_CUSTOM (getaddrinfo_fail, 0, 0, 10000)
   TEST_ENTRY_CUSTOM (getaddrinfo_fail_sync, 0, 0, 10000)

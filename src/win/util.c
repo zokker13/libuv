@@ -97,6 +97,47 @@ void uv__util_init(void) {
   }
 }
 
+int32_t uv__priority_win_to_nice(DWORD priority) {
+  if (priority == REALTIME_PRIORITY_CLASS) {
+
+  }
+}
+
+uint32_t uv_get_priority_class(HANDLE handle) {
+  DWORD ret = GetPriorityClass(pid);
+
+  if (ret == 0) {
+    return uv_translate_sys_error(GetLastError());
+  }
+
+  return ret;
+}
+
+int32_t uv_getpriority(uint32_t pid) {
+
+  HANDLE procHandle = OpenProcess(PROCESS_QUERY_INFORMATION, false, pid);
+  if (procHandle == 0) {
+    return uv_translate_sys_error(GetLastError());
+  }
+
+  int32_t nice = uv__priority_win_to_nice(uv_get_priority_class(procHandle));
+  if (CloseHandle(procHandle) == 0) {
+    return uv_translate_sys_error(GetLastError());
+  }
+
+  return nice;
+}
+
+int32_t uv_setpriority(unint32_t pid, int32_t ) {
+  /**
+   * 0 = 0x00000020
+   *
+
+
+
+
+   */
+}
 
 int uv_exepath(char* buffer, size_t* size_ptr) {
   int utf8_len, utf16_buffer_len, utf16_len;

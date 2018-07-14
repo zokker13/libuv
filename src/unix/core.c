@@ -34,6 +34,8 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/time.h> /* get/set priority */
+#include <sys/resource.h>  /* get/set priority */
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <limits.h> /* INT_MAX, PATH_MAX, IOV_MAX */
@@ -112,6 +114,33 @@ uint64_t uv_hrtime(void) {
   return uv__hrtime(UV_CLOCK_PRECISE);
 }
 
+int32_t uv_getpriority(uv_pid_t pid, int32_t *priority) {
+  uint32_t which = PRIO_PROCESS;
+  int32_t prio;
+  int32_t err;
+
+  errno = 0;
+  prio = getpriority(which, pid);
+  err = errno;
+  if (err == 0) {
+    *priority = prio;
+  }
+
+  return UV__ERR(err);
+}
+
+int32_t uv_setpriority(uv_pid_t pid, int32_t inc) {
+  int32_t prio = 0;
+  int32_t res = uv_getpriority(pid, &prio);
+
+  if (res != 0) {
+    return res;
+  }
+
+  res = setpriority(PRIO_PROCESS, pid, prio + inc);
+
+  return UV__ERR(res);
+}
 
 void uv_close(uv_handle_t* handle, uv_close_cb close_cb) {
   assert(!uv__is_closing(handle));
